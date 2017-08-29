@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="donald-trump-hode2.ico" />
+<style>
+div.dice{
+	float:left;
+	width:32px;
+	background:#CC3333;
+	border:#AAF 1px solid;
+	padding:50px;
+	font-size:60px;
+	text-align:center;
+	margin:80px;
+}
+</style>
+</head>
+<body>
+<script>
+    
+var n = 0;
+var totalsum= 0;
+var avg = 0;
+var start = true;
+var status;
+var dictionary = {};
+    
+function toggle(){
+    if(start === true) {
+        document.getElementById("t").innerHTML = "stop";
+        start=false;
+        status = setInterval(start_rolling,250);
+    }
+    else{
+        document.getElementById("t").innerHTML = "start";
+        start=true;
+        clearInterval(status);
+    }
+}
+    
+function start_rolling(){
+    n++;
+    document.getElementById("nkast").innerHTML = "N: " + n; 
+    document.getElementById("tsum").innerHTML = " Total sum: " + totalsum;
+    var d = rollDice();
+    totalsum += d;
+    avg = totalsum / n ;
+    document.getElementById("avgvalue").innerHTML = "Average value is: " + avg;
+    var e = entropy(d,n);
+    document.getElementById("e1").innerHTML = "entropy: "+ e;
+    document.getElementById("e2").innerHTML = "entropy normalized on #Shannon: "+ e/Math.log2(Object.keys(dictionary).length);
+    }
+    
+function rollDice(){
+    var die = document.getElementById("die");
+    var d = Math.floor(Math.random() * 6) + 1;
+    die.innerHTML = d;
+    return d;
+    }
+    
+function entropy(d,n){
+    if(d.toString() in dictionary){
+        dictionary[d.toString()]+=1;
+    }
+    else{
+        dictionary[d.toString()]=1;
+    }
+    var e=0;
+    for( k in dictionary){
+        e += -1*(dictionary[k]/n)*Math.log2((dictionary[k])/n);
+    }
+    return e;
+}
+
+</script>
+<div id="die" class="dice">0</div>
+<button id="t" onclick="toggle()">Start</button>
+<p id ="nkast" >N: 0</p>
+<p id ="tsum">Total sum: 0</p>
+<p id = "avgvalue">Average value is: </p>
+<p id ="e1">entropy: </p>
+<p id ="e2">entropy normalized on #Shannon: </p>
+
+</body>
+</html>
